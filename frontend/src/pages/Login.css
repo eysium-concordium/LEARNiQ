@@ -1,0 +1,21 @@
+.c1 {
+    margin: 5vh auto;
+    max-width: 500px;
+    background-color: #38475b;
+    color: white;
+    text-align: left;
+    padding: 15px;
+    margin-top: 80px;
+}
+
+.form-control {
+    background-color: #27374D;
+    border: 1px solid gray;
+    color: white
+}
+p .mb-4{
+    color:rgb(222, 203, 203)
+}
+a{
+    text-decoration: none;
+}
