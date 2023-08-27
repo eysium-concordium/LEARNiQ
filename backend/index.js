@@ -11,6 +11,7 @@ app.use(express.json());
 
 // Available Routes
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/quiz", require("./routes/quiz"));
 
 app.listen(port, () => {
   console.log(` Backend started at http://localhost:${port}`);
