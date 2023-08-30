@@ -1,28 +1,39 @@
-.sp{
-    color:white; font-size: larger;
-    font-weight: bolder;
+.sp {
+    color: white;
+    font-size: larger;
+    font-family: 'Abril Fatface', cursive;
     font-family: 'Barriecito', cursive;
     font-family: 'Maven Pro', sans-serif;
+    font-family: 'Monoton', cursive;
     font-family: 'Pacifico', cursive;
     font-family: 'Permanent Marker', cursive;
     font-family: 'Roboto', sans-serif;
     font-family: 'Space Mono', monospace;
 }
-img{
-    border-radius:100px
+
+.imgg {
+    border-radius: 100px
 }
+
 /* .row , nav{
     background-color: #27374D;
 } */
-.btn{
-    font-family:Arial, Helvetica, sans-serif;font-weight: bold;
+.btn {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
 }
+
 .nav-link {
     color: white;
     font-family: 'Roboto Mono', monospace;
     font-weight: bolder;
 }
-.cont1{
-    position:fixed;
-    background-color:rgb(45, 45, 69);
+
+.cont1 {
+    position: fixed;
+    background-color: rgb(12, 12, 38);
+}
+
+.nav-link:hover {
+    color: rgb(97, 169, 97);
 }

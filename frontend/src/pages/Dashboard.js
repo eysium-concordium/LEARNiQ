@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { motion } from 'framer-motion';
 import "./Dashboard.css"
+//import './images/learniq-login'
 const pdata = [
     {
         name: 'Monday',
@@ -84,9 +85,16 @@ export default function Dashboardfinal() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-sm-4">
+                            <div className="col-sm-6">
 
                             </div>
+                            <motion.div className="col-sm-2" animate={{ x:100}}
+                                transition={{ ease: "easeOut", duration: 2 }}
+                                whileHover={{
+                                    scale: 2
+                                }}>
+                                <img src="images/learniq-logo.png" className="rounded-circle" style={{ width: '80px', height: '80px' }}></img>
+                            </motion.div>
                         </div>
                     </div>
                 </motion.div>
