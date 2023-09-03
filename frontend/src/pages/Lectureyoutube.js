@@ -1,115 +1,177 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import './Lectureyoutubecss.css'
-export default function Lectureyoutube() {
-  return (
-    <>
-      <div className="container">
-        <br></br>
-        <div className="container">
-          <div className="row">
-            <div className="col-sm-4">
-              <motion.div className="row" whileHover={{ scale: 1.1 }}>
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbFCURuJZr0pVpmhA6OPAAfFbolJdPVRix2EZbhWraF4rCfzWwiiWYpcnXsJTd-AimoII&usqp=CAU" className="imy1"></img>
-              </motion.div>
-              <br></br>
-              <div className="row">
-                <span className="lectextt">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae dolorem sapiente aspernatur omnis labore, ratione qui quibusdam error perferendis quod iste quae blanditiis harum quaerat quis beatae atque quas!
-                </span>
-              </div>
-            </div>
-            <div className="col-sm-2">
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import "./Lectureyoutubecss.css";
 
+export default function Lectureyoutube() {
+  const [completedVideos, setCompletedVideos] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [getvideos, setGetVideos] = useState([]);
+  const { playlistId } = useParams();
+  const navigate = useNavigate();
+  const [playlistInfo, setPlaylistInfo] = useState({
+    thumbnailUrl: "",
+    description: "",
+  });
+
+  useEffect(() => {
+    const storedCompletedVideos = localStorage.getItem("completedVideos");
+    if (storedCompletedVideos) {
+      setCompletedVideos(JSON.parse(storedCompletedVideos));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("completedVideos", JSON.stringify(completedVideos));
+  }, [completedVideos]);
+
+  useEffect(() => {
+    const API_KEY = "AIzaSyDQVefVfE8A6B0nZ7PI58kN2vFk4Z42ziw";
+    const apiUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${API_KEY}`;
+    const backendURL = "http://localhost:5000/api/lecture/get-video-completed";
+    const playlistUrl = `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${API_KEY}`;
+    const token = localStorage.getItem("token");
+
+    axios
+      .get(playlistUrl)
+      .then((response) => {
+        const playlistData = response.data.items[0].snippet;
+        setPlaylistInfo({
+          thumbnailUrl: playlistData.thumbnails.medium.url,
+          description: playlistData.description,
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching playlist information:", error);
+      });
+
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        setVideos(response.data.items);
+
+        const videoIds = response.data.items.map(
+          (video) => video.snippet.resourceId.videoId
+        );
+        setGetVideos(videoIds);
+      })
+      .catch((error) => {
+        console.error("Error fetching playlist videos:", error);
+      });
+
+    axios
+      .get(backendURL, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((response) => {
+        const videoIds = response.data.map((video) => video.videoId);
+        setCompletedVideos(videoIds);
+      })
+      .catch((error) => {
+        console.error("Error fetching videos from the backend:", error);
+      });
+  }, [playlistId]);
+
+  const markVideoAsCompleted = (videoId) => {
+    const token = localStorage.getItem("token");
+    const isVideoCompleted = completedVideos.includes(videoId);
+
+    if (isVideoCompleted) {
+      const updatedCompletedVideos = completedVideos.filter(
+        (completedVideoId) => completedVideoId !== videoId
+      );
+      setCompletedVideos(updatedCompletedVideos);
+    } else {
+      const updatedCompletedVideos = [...completedVideos, videoId];
+      setCompletedVideos(updatedCompletedVideos);
+    }
+
+    const dataToSend = {
+      videoId: videoId,
+      playlistId: playlistId,
+      completed: !isVideoCompleted,
+    };
+
+    fetch("http://localhost:5000/api/lecture/mark-video-completed", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify(dataToSend),
+    })
+      .then((response) => response.json())
+      .then((data) => {})
+      .catch((error) => {
+        console.error("Error sending data:", error);
+      });
+  };
+
+  const constructVideoURL = (videoId) => {
+    return `https://www.youtube.com/watch?v=${videoId}`;
+  };
+
+  return (
+    <div className="container">
+      <br />
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-4">
+            <motion.div className="row" whileHover={{ scale: 1.1 }}>
+              <img
+                src={playlistInfo.thumbnailUrl}
+                className="imy1"
+                alt="Thumbnail"
+              />
+            </motion.div>
+            <br />
+            <div className="row">
+              <span className="lectextt">{playlistInfo.description}</span>
             </div>
-            <div className="col-sm-6">
-              <div className="row">
-                <div className="wrapper">
-                  <div className="searchBar">
-                    <input id="searchQueryInput" type="text" name="searchQueryInput" placeholder="Search" style={{ color: 'whitesmoke' }} />
-                    <Link to='/Lectureyoutube'> <motion.button id="searchQuerySubmit" type="submit" name="searchQuerySubmit" whileHover={{ scale: 1.5 }}>
-                      <svg style={{ width: '24px', height: '24px' }} viewBox="0 0 24 24"><path fill="whitesmoke" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
-                      </svg>
-                    </motion.button></Link>
-                  </div>
-                </div>
-              </div>
-              <br></br>
-              <br></br>
-              <br></br>
-              <div className="row">
+          </div>
+          <div className="col-sm-2"></div>
+          <div className="col-sm-6">
+            <br />
+            {videos.map((video) => (
+              <div className="row" key={video.id}>
                 <div className="col-sm-1">
                   <div className="form-check">
-                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id={`flexCheckDefault-${video.id}`}
+                      onChange={() => markVideoAsCompleted(video.id)}
+                      checked={
+                        completedVideos.includes(video.id) ||
+                        getvideos.includes(video.id)
+                      }
+                    ></input>
                   </div>
                 </div>
                 <div className="col-sm-11">
                   <div className="row">
-                    <div className="col-sm-6">
-                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9szzpLIC9m0cBUn_F7Ug1RsVhiuLciaUK2EWGLpA47BGGy_LhnA767yylXIN0ki6101s&usqp=CAU" className="imy2"></img>
-                    </div>
-                    <div className="col-sm-6">
-                      <span className="lectext">Lorem ipsum dolor sit amet consectetur</span>
-                    </div>
+                    <a
+                      href={constructVideoURL(video.snippet.resourceId.videoId)}
+                      target="_blank"
+                    >
+                      <div className="col-sm-6">
+                        <img src={video.snippet.thumbnails.medium.url}></img>
+                      </div>
+                      <div className="col-sm-6">
+                        <span className="lectext">{video.snippet.title}</span>
+                      </div>
+                    </a>
                   </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-sm-1">
-                  <div className="form-check">
-                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
-                  </div>
-                </div>
-                <div className="col-sm-11">
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9szzpLIC9m0cBUn_F7Ug1RsVhiuLciaUK2EWGLpA47BGGy_LhnA767yylXIN0ki6101s&usqp=CAU" className="imy2"></img>
-                    </div>
-                    <div className="col-sm-6">
-                      <span className="lectext">Lorem ipsum dolor sit amet consectetur</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-sm-1">
-                  <div className="form-check">
-                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
-                  </div>
-                </div>
-                <div className="col-sm-11">
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9szzpLIC9m0cBUn_F7Ug1RsVhiuLciaUK2EWGLpA47BGGy_LhnA767yylXIN0ki6101s&usqp=CAU" className="imy2"></img>
-                    </div>
-                    <div className="col-sm-6">
-                      <span className="lectext">Lorem ipsum dolor sit amet consectetur</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-sm-1">
-                  <div className="form-check">
-                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"></input>
-                  </div>
-                </div>
-                <div className="col-sm-11">
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9szzpLIC9m0cBUn_F7Ug1RsVhiuLciaUK2EWGLpA47BGGy_LhnA767yylXIN0ki6101s&usqp=CAU" className="imy2"></img>
-                    </div>
-                    <div className="col-sm-6">
-                      <span className="lectext">Lorem ipsum dolor sit amet consectetur</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
-    </>
-  )
+    </div>
+  );
 }
