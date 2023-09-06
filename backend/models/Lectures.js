@@ -6,9 +6,14 @@ const lectureSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
-  lecturUrl: {
+  playListID: {
     type: String,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
   },
 });
 
-module.exports = mongoose.model("lecture", lectureSchema);
+module.exports = mongoose.model("Lecture", lectureSchema);
