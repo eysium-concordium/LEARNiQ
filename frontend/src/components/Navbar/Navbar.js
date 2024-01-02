@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+
 function Navbar() {
+  const [hasToken, setHasToken] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setHasToken(!!token);
+  }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setHasToken(false);
+    navigate("/Home");
+  };
+
   return (
     <div className="container-fluid cont1">
       <div className="row">
@@ -12,39 +28,48 @@ function Navbar() {
             height="55px"
             width="55px"
             className="imgg"
+            alt="LearnIQ Logo"
           />
-          <img src="images/learniqtext.png" height="30px" width="140px"></img>
+          <img
+            src="images/learniqtext.png"
+            height="30px"
+            width="140px"
+            alt="LearnIQ Text"
+          />
         </motion.div>
         <div className="col-sm-5">
           <nav className="navbar">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a className="nav-link">Home</a>
-              </li>
-            </ul>
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a className="nav-link">About Us</a>
-              </li>
-            </ul>
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a className="nav-link">Quiz</a>
-              </li>
-            </ul>
-            <ul className="navbar-nav">
-              <Link to="/Dashboard" className="nav-link">
-                Dashboard
-              </Link>
-            </ul>
-            <ul className="navbar-nav">
-              <Link to="/Lecture" className="nav-link">
-                Lectures
-              </Link>
-            </ul>
-            <button type="button" className="btn btn-outline-success">
-              <span>Logout</span>
-            </button>
+            {hasToken && (
+              <>
+                <ul className="navbar-nav">
+                  <Link to="/Quiz" className="nav-link">
+                    Quiz
+                  </Link>
+                </ul>
+                <ul className="navbar-nav">
+                  <Link to="/Dashboard" className="nav-link">
+                    Dashboard
+                  </Link>
+                </ul>
+                <ul className="navbar-nav">
+                  <Link to="/Lecture" className="nav-link">
+                    Lectures
+                  </Link>
+                </ul>
+              </>
+            )}
+
+            {hasToken && (
+              <>
+                <button
+                  type="button"
+                  className="btn btn-outline-success"
+                  onClick={handleLogout}
+                >
+                  <span>Logout</span>
+                </button>
+              </>
+            )}
           </nav>
         </div>
       </div>

@@ -6,6 +6,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Lecture from "./pages/Lecture";
 import Lectureyoutube from "./pages/Lectureyoutube";
+import Quiz from "./pages/Quiz";
+import HomePage from "./pages/Home";
 function App() {
   return (
     <div className="App">
@@ -19,6 +21,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
+          <Route path="/quiz" element={<Quiz />}></Route>
+          <Route path="/home" element={<HomePage />}></Route>
           <Route
             path={"/lecture" || "/lecture/:search"}
             element={<Lecture />}

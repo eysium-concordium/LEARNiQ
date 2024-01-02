@@ -1,0 +1,100 @@
+/* Quiz.css */
+
+.quiz-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgb(23, 23, 47);
+    color: white;
+  }
+  
+  .quiz-box {
+    width: 700px;
+    background-color: rgb(21, 20, 20);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .quiz-title {
+    text-align: center;
+  }
+  
+  .quiz-question {
+    margin-bottom: 10px;
+  }
+  
+  .quiz-answers {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .quiz-answers label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .quiz-option {
+    cursor: pointer;
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .quiz-option:hover {
+    background-color: black;
+  }
+  
+  .correct-option {
+    background-color: #147614; /* Green for correct options */
+  }
+  
+  .incorrect-option {
+    background-color: #b75555; /* Red for incorrect options */
+  }
+  
+  .quiz-button:disabled {
+    background-color: #555; /* Adjust color for disabled state */
+    cursor: not-allowed;
+  }
+
+  .quiz-button {
+    background-color: #001f3f;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .quiz-button:hover {
+    background-color: navy;
+  }
+  
+  .start-quiz {
+    position: relative;
+    right: 20%;
+    bottom: -5%;
+  }
+  
+  .big-text {
+    position: relative;
+    bottom: 10%;
+    left: 2%;
+  }
+  
+  /* Add styles for the impressive mood */
+.impressive-text {
+    color: green; /* Change the color to your preference */
+    font-size: 24px; /* Change the font size to your preference */
+  }
+  
+  /* Add styles for the improve mood */
+  .improve-text {
+    color: red; /* Change the color to your preference */
+    font-size: 20px; /* Change the font size to your preference */
+  }
+  

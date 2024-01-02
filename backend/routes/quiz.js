@@ -1,17 +1,18 @@
 const express = require("express");
 const router = express.Router();
-var fetchuser = require("../middleware/fetchuser");
-const Quiz = require("../models/Quiz"); // Import Quiz model
+const fetchuser = require("../middleware/fetchuser");
+const Quiz = require("../models/Quiz");
 
-// Route to handle user quiz submission and update points
 router.post("/submit-quiz", fetchuser, async (req, res) => {
   try {
+    // console.log("Yeh lo " + req.body);
     const { userId, points } = req.body;
-
+    // console.log(points + " " + userId);
     let quiz = await Quiz.findOne({ user: userId });
     if (!quiz) {
       quiz = await Quiz.create({ user: userId });
     }
+    quiz.user = userId;
     quiz.points = quiz.points + points;
     await quiz.save();
 

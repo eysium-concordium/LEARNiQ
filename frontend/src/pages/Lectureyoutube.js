@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Router } from "react-router-dom";
 import { motion } from "framer-motion";
 import "./Lectureyoutubecss.css";
-
+import Navbar from "../components/Navbar/Navbar";
 export default function Lectureyoutube() {
   const [completedVideos, setCompletedVideos] = useState([]);
   const [videos, setVideos] = useState([]);
@@ -115,63 +115,67 @@ export default function Lectureyoutube() {
   };
 
   return (
-    <div className="container">
-      <br />
+    <>
       <div className="container">
-        <div className="row">
-          <div className="col-sm-4">
-            <motion.div className="row" whileHover={{ scale: 1.1 }}>
-              <img
-                src={playlistInfo.thumbnailUrl}
-                className="imy1"
-                alt="Thumbnail"
-              />
-            </motion.div>
-            <br />
-            <div className="row">
-              <span className="lectextt">{playlistInfo.description}</span>
-            </div>
-          </div>
-          <div className="col-sm-2"></div>
-          <div className="col-sm-6">
-            <br />
-            {videos.map((video) => (
-              <div className="row" key={video.id}>
-                <div className="col-sm-1">
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id={`flexCheckDefault-${video.id}`}
-                      onChange={() => markVideoAsCompleted(video.id)}
-                      checked={
-                        completedVideos.includes(video.id) ||
-                        getvideos.includes(video.id)
-                      }
-                    ></input>
-                  </div>
-                </div>
-                <div className="col-sm-11">
-                  <div className="row">
-                    <a
-                      href={constructVideoURL(video.snippet.resourceId.videoId)}
-                      target="_blank"
-                    >
-                      <div className="col-sm-6">
-                        <img src={video.snippet.thumbnails.medium.url}></img>
-                      </div>
-                      <div className="col-sm-6">
-                        <span className="lectext">{video.snippet.title}</span>
-                      </div>
-                    </a>
-                  </div>
-                </div>
+        <br />
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-4">
+              <motion.div className="row" whileHover={{ scale: 1.1 }}>
+                <img
+                  src={playlistInfo.thumbnailUrl}
+                  className="imy1"
+                  alt="Thumbnail"
+                />
+              </motion.div>
+              <br />
+              <div className="row">
+                <span className="lectextt">{playlistInfo.description}</span>
               </div>
-            ))}
+            </div>
+            <div className="col-sm-2"></div>
+            <div className="col-sm-6">
+              <br />
+              {videos.map((video) => (
+                <div className="row" key={video.id}>
+                  <div className="col-sm-1">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id={`flexCheckDefault-${video.id}`}
+                        onChange={() => markVideoAsCompleted(video.id)}
+                        checked={
+                          completedVideos.includes(video.id) ||
+                          getvideos.includes(video.id)
+                        }
+                      ></input>
+                    </div>
+                  </div>
+                  <div className="col-sm-11">
+                    <div className="row">
+                      <a
+                        href={constructVideoURL(
+                          video.snippet.resourceId.videoId
+                        )}
+                        target="_blank"
+                      >
+                        <div className="col-sm-6">
+                          <img src={video.snippet.thumbnails.medium.url}></img>
+                        </div>
+                        <div className="col-sm-6">
+                          <span className="lectext">{video.snippet.title}</span>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

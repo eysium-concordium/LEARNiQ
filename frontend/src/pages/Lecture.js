@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./Lecturecss.css";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, Router, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import Navbar from "../components/Navbar/Navbar";
 
 export default function Lecture() {
   const [Playlist, setPlaylist] = useState([]);
@@ -58,14 +59,14 @@ export default function Lecture() {
           },
         })
         .then((response) => {
-          console.log(response.data.items);
+          // console.log(response.data.items);
           setPlaylist(response.data.items);
         })
         .catch((error) => {
           console.error("Error fetching playlists:", error);
         });
     } catch (error) {
-      console.log(error.message);
+      // console.log(error.message);
     }
   };
   const sendPlaylistDataToBackend = (playlistId, title) => {
@@ -87,7 +88,7 @@ export default function Lecture() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Data sent successfully:", data);
+        // console.log("Data sent successfully:", data);
       })
       .catch((error) => {
         console.error("Error sending data:", error);

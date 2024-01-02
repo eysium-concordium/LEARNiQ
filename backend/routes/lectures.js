@@ -29,7 +29,7 @@ router.post("/playlist-add", fetchuser, async (req, res) => {
 
     res.json({ message: "Lecture information saved successfully" });
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     res.status(500).send("Internal server error!");
   }
 });
@@ -53,10 +53,10 @@ router.post("/mark-video-completed", fetchuser, async (req, res) => {
         completed: true,
       });
     } else if (completedVideo && completedVideo.completed === true) {
-      console.log("MARKED FALSE");
+      // console.log("MARKED FALSE");
       completedVideo.completed = false;
     } else if (completedVideo && completedVideo.completed === false) {
-      console.log("MARKED true");
+      // console.log("MARKED true");
       completedVideo.completed = true;
     }
 
