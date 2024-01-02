@@ -30,9 +30,8 @@ function Register() {
       );
 
       const json = await response.json();
-      console.log(json);
+      // console.log(json);
 
-      // Save the auth token and redirect
       localStorage.setItem("token", json.authtoken);
       navigate("/dashboard");
     } catch (error) {

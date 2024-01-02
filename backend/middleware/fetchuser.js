@@ -12,7 +12,7 @@ const fetchuser = (req, res, next) => {
   //const authToken = token.replace("Bearer ", "");
   try {
     const data = jwt.verify(token, JWT_SECRET);
-    req.user = data.user;
+    req.user = data.user; // Assuming your user object contains an "_id" property
     next();
   } catch (error) {
     res.status(401).send({ error: "Please authenticate using a valid token" });

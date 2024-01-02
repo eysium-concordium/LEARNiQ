@@ -5,7 +5,6 @@ import "./Login.css";
 import { motion } from "framer-motion";
 
 function Login() {
-  // Capitalized component name
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   let navigate = useNavigate();
 
@@ -24,10 +23,9 @@ function Login() {
       });
 
       const json = await response.json();
-      console.log(json);
+      // console.log(json);
 
       if (json.success) {
-        // Save the auth token and redirect
         localStorage.setItem("token", json.authtoken);
         navigate("/dashboard");
       } else {
@@ -106,4 +104,4 @@ function Login() {
   );
 }
 
-export default Login; // Capitalized component name
+export default Login;
