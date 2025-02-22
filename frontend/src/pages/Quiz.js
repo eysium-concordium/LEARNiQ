@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { Link, Router, useNavigate, useParams } from "react-router-dom";
-import "./Quiz.css";
+import "../Styles/Quiz.css";
 import Navbar from "../components/Navbar/Navbar";
 
 const Quiz = () => {
@@ -20,14 +20,14 @@ const Quiz = () => {
   const [disableButton, setDisableButton] = useState(false);
   const [userId, setUserID] = useState(null);
   const [pointsUpdated, setPointsUpdated] = useState(false);
-  const API_URL = "https://quizapi.io/api/v1/questions";
-  const API_KEY = "nl213ygcZiZICCod1vYoHBBCfmjj4OecFMYHyNHu";
+  const API_URL = process.env.REACT_APP_API_URL_QUIZ;
+  const API_KEY = process.env.REACT_APP_API_KEY_QUIZ;
   var point = 0;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:5000/api/auth/getuser", {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/getuser`, {
         method: "POST",
         headers: {
           Authorization: token,
@@ -138,7 +138,7 @@ const Quiz = () => {
       progress += 10;
       setRefreshKaro(progress);
 
-      if (progress >= 1000) {
+      if (progress >= 100) {
         clearInterval(interval);
         window.location.reload();
       }
@@ -153,7 +153,7 @@ const Quiz = () => {
     try {
       const token = localStorage.getItem("token");
       // console.log("le bhai" + points);
-      const backendURL = "http://localhost:5000/api/quiz/submit-quiz";
+      const backendURL = `${process.env.REACT_APP_BACKEND_URL}/api/quiz/submit-quiz`;
       const response = await fetch(backendURL, {
         method: "POST",
         headers: {

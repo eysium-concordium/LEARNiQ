@@ -1,6 +1,6 @@
 import { useState, React } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./Login.css";
+import "../Styles/Login.css";
 import { motion } from "framer-motion";
 function Register() {
   const [credentials, setCredentials] = useState({
@@ -15,7 +15,7 @@ function Register() {
     const { name, email, password } = credentials;
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/createuser",
+        `${process.env.REACT_APP_BACKEND_URL}/api/auth/createuser`,
         {
           method: "POST",
           headers: {

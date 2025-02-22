@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate, Router } from "react-router-dom";
 import { motion } from "framer-motion";
-import "./Lectureyoutubecss.css";
+import "../Styles/Lectureyoutubecss.css";
 import Navbar from "../components/Navbar/Navbar";
 export default function Lectureyoutube() {
   const [completedVideos, setCompletedVideos] = useState([]);
@@ -27,9 +27,9 @@ export default function Lectureyoutube() {
   }, [completedVideos]);
 
   useEffect(() => {
-    const API_KEY = "AIzaSyDQVefVfE8A6B0nZ7PI58kN2vFk4Z42ziw";
+    const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
     const apiUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=${API_KEY}`;
-    const backendURL = "http://localhost:5000/api/lecture/get-video-completed";
+    const backendURL = `${process.env.REACT_APP_BACKEND_URL}/api/lecture/get-video-completed`;
     const playlistUrl = `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${playlistId}&key=${API_KEY}`;
     const token = localStorage.getItem("token");
 
@@ -95,14 +95,17 @@ export default function Lectureyoutube() {
       completed: !isVideoCompleted,
     };
 
-    fetch("http://localhost:5000/api/lecture/mark-video-completed", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(dataToSend),
-    })
+    fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/api/lecture/mark-video-completed`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(dataToSend),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {})
       .catch((error) => {

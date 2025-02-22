@@ -14,7 +14,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { motion } from "framer-motion";
-import "./Dashboard.css";
+import "../Styles/Dashboard.css";
 import Navbar from "../components/Navbar/Navbar";
 //import './images/learniq-login'
 
@@ -48,7 +48,7 @@ export default function Dashboardfinal() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:5000/api/auth/getuser", {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/getuser`, {
         method: "POST",
         headers: {
           Authorization: token,
@@ -76,7 +76,7 @@ export default function Dashboardfinal() {
           }
 
           const response = await fetch(
-            "http://localhost:5000/api/dashboard/getuserdetails",
+            `${process.env.REACT_APP_BACKEND_URL}/api/dashboard/getuserdetails`,
             {
               method: "POST",
               headers: {

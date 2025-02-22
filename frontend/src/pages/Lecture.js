@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./Lecturecss.css";
+import "../Styles/Lecturecss.css";
 import axios from "axios";
 import { Link, Router, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -14,7 +14,7 @@ export default function Lecture() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:5000/api/auth/getuser", {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/getuser`, {
         method: "POST",
         headers: {
           Authorization: token,
@@ -44,7 +44,10 @@ export default function Lecture() {
       setPlaylist([]);
       return;
     }
-    const API_KEY = "AIzaSyDQVefVfE8A6B0nZ7PI58kN2vFk4Z42ziw";
+    const API_KEY = process.env.REACT_APP_API;
+    console.log("Environment Variables:", process.env);
+    console.log("API Key:", process.env.REACT_APP_API);
+
     const maxResults = 10;
 
     try {
@@ -78,7 +81,7 @@ export default function Lecture() {
       title: title,
     };
 
-    fetch("http://localhost:5000/api/lecture/playlist-add", {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/lecture/playlist-add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

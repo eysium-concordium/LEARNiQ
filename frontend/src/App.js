@@ -17,12 +17,12 @@ function App() {
         <br></br>
         <br></br>
         <Routes>
-          <Route path="/"></Route>
           <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/quiz" element={<Quiz />}></Route>
-          <Route path="/home" element={<HomePage />}></Route>
+          <Route path="/" element={<HomePage />}></Route>
+          <Route path="/Home" element={<HomePage />}></Route>
           <Route
             path={"/lecture" || "/lecture/:search"}
             element={<Lecture />}
