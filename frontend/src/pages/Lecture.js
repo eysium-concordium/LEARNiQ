@@ -1,200 +1,183 @@
 import React, { useEffect, useState } from "react";
-import "../Styles/Lecturecss.css";
 import axios from "axios";
-import { Link, Router, useNavigate, useParams } from "react-router-dom";
-import { motion } from "framer-motion";
-import Navbar from "../components/Navbar/Navbar";
+import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons'; // Import icons
+import "../Styles/Lecturecss.css";
 
 export default function Lecture() {
-  const [Playlist, setPlaylist] = useState([]);
+  const [lectures, setLectures] = useState([]); // Fetch from YouTube API
   const [search, setSearch] = useState("");
-  const [userId, setUserID] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/getuser`, {
-        method: "POST",
-        headers: {
-          Authorization: token,
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Response not OK");
-          }
-        })
-        .then((data) => {
-          //console.log(data._id);
-          setUserID(data._id);
-        })
-        .catch((error) => {
-          console.error("Error fetching user info:", error.message);
-        });
-    } else {
+    if (!token) {
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
-  const fetchPlaylists = (searchQuery) => {
-    if (searchQuery.trim() === "") {
-      setPlaylist([]);
+  // Fetch Lectures from YouTube API
+  const fetchLectures = async (query) => {
+    if (!query.trim()) {
+      setError("Please enter a search term");
+      setLectures([]); // Clear previous results when the search is empty
       return;
     }
-    const API_KEY = process.env.REACT_APP_API;
-    console.log("Environment Variables:", process.env);
-    console.log("API Key:", process.env.REACT_APP_API);
 
-    const maxResults = 10;
+    setIsLoading(true);
+    setError(null);
 
     try {
-      axios
-        .get("https://www.googleapis.com/youtube/v3/search", {
-          params: {
-            key: API_KEY,
-            q: searchQuery,
-            part: "snippet",
-            type: "playlist",
-            maxResults: maxResults,
-          },
-        })
-        .then((response) => {
-          // console.log(response.data.items);
-          setPlaylist(response.data.items);
-        })
-        .catch((error) => {
-          console.error("Error fetching playlists:", error);
-        });
+      const response = await axios.get("https://www.googleapis.com/youtube/v3/search", {
+        params: {
+          key: "AIzaSyDGwAduyewmSxfB3qxIlWojnaAdd0CU4bo",
+          q: query,
+          part: "snippet",
+          type: "video", // Fetch videos instead of playlists
+          maxResults: 10,
+        },
+      });
+
+      setLectures(response.data.items || []);
     } catch (error) {
-      // console.log(error.message);
+      console.error("Error fetching lectures:", error);
+      setError("Failed to fetch lectures. Try again.");
+      setLectures([]); // Clear results in case of an error
+    } finally {
+      setIsLoading(false);
     }
   };
-  const sendPlaylistDataToBackend = (playlistId, title) => {
-    console.log("Sending data to backend");
-    const token = localStorage.getItem("token");
-    const dataToSend = {
-      userID: userId,
-      playlistId: playlistId,
-      title: title,
-    };
 
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/lecture/playlist-add`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-      body: JSON.stringify(dataToSend),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log("Data sent successfully:", data);
-      })
-      .catch((error) => {
-        console.error("Error sending data:", error);
-      });
-  };
-
-  useEffect(() => {
-    fetchPlaylists(search);
-  }, []);
-
+  // Handle Search Form Submission
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetchPlaylists(search);
+    fetchLectures(search);
+  };
+
+  // Variants for animations
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        staggerChildren: 0.1, // Stagger the children's animation
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+        type: "spring", // Add spring effect
+        stiffness: 80, // Adjust stiffness
+      },
+    },
+    hover: {
+      scale: 1.05,
+      transition: { duration: 0.2 },
+    },
   };
 
   return (
-    <>
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-3"></div>
-          <div className="col-sm-6">
-            <div className="wrapper">
-              <form onSubmit={handleSubmit}>
-                <div className="searchBar">
-                  <input
-                    id="searchQueryInput"
-                    type="text"
-                    name="searchQueryInput"
-                    placeholder="Search"
-                    style={{ color: "whitesmoke" }}
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                  />
-                  <motion.button
-                    id="searchQuerySubmit"
-                    type="submit"
-                    name="searchQuerySubmit"
-                    whileHover={{ scale: 1.5 }}
-                  >
-                    <svg
-                      style={{ width: "24px", height: "24px" }}
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="whitesmoke"
-                        d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
-                      />
-                    </svg>
-                  </motion.button>
-                </div>
-              </form>
-            </div>
-          </div>
-          <div className="col-sm-3"></div>
-        </div>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-        <div className="container">
-          <div className="row">
-            {Playlist.map((playlist) => (
-              <div className="col-sm-4" key={playlist.id.playlistId}>
-                <motion.div className="row" whileHover={{ scale: 1.1 }}>
-                  <Link
-                    to={`/Lectureyoutube/${playlist.id.playlistId}`}
-                    onClick={() =>
-                      sendPlaylistDataToBackend(
-                        playlist.id.playlistId,
-                        playlist.snippet.title
-                      )
-                    }
-                  >
-                    <img
-                      src={playlist.snippet.thumbnails.medium.url}
-                      style={{
-                        width: "350px",
-                        height: "225px",
-                        padding: "5px",
-                        borderRadius: "15px",
-                      }}
-                      alt="Playlist Thumbnail"
-                    />
-                  </Link>
-                </motion.div>
-                <div className="row">
-                  <Link to={`/Lectureyoutube/${playlist.id.playlistId}`}>
-                    <p
-                      style={{
-                        color: "whitesmoke",
-                        fontWeight: "bolder",
-                      }}
-                      className="pi"
-                    >
-                      {playlist.snippet.title}
-                    </p>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+    <motion.div
+      className="lecture-container a"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div
+        className="search-section"
+        variants={itemVariants} // Apply variants to individual sections
+      >
+        <form onSubmit={handleSubmit} className="search-form">
+          <input
+            className="search-input"
+            type="text"
+            placeholder="Search for lectures..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button className="search-button" type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <FontAwesomeIcon icon={faSpinner} spin /> Searching...
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={faSearch} /> Search
+              </>
+            )}
+          </button>
+        </form>
+      </motion.div>
+
+      {/* Error Message */}
+      {error && (
+        <motion.p
+          className="error-message"
+          variants={itemVariants} // Apply variants to the error message
+        >
+          {error}
+        </motion.p>
+      )}
+
+      {/* Loading Indicator */}
+      {isLoading && (
+        <motion.div
+          className="loading-indicator"
+          variants={itemVariants} // Apply variants to the loading indicator
+        >
+          <FontAwesomeIcon icon={faSpinner} spin size="2x" />
+          <p>Loading lectures...</p>
+        </motion.div>
+      )}
+
+      {/* Display Lectures */}
+      <div className="lecture-list">
+        <AnimatePresence>
+          {lectures.map((lecture) => (
+            <motion.div
+              key={lecture.id.videoId}
+              className="lecture-card"
+              variants={itemVariants}
+              whileHover="hover"
+              exit={{ opacity: 0, y: -20, transition: { duration: 0.3 } }}
+            >
+              <Link to={`/Lectureyoutube/${lecture.id.videoId}`} className="lecture-link">
+                <motion.img
+                  src={lecture.snippet.thumbnails.medium.url}
+                  alt={lecture.snippet.title}
+                  className="lecture-thumbnail"
+                  whileHover={{ scale: 1.1 }} // Zoom in on thumbnail hover
+                  transition={{ duration: 0.3 }}
+                />
+                <motion.h3 className="lecture-title">{lecture.snippet.title}</motion.h3>
+                <motion.p className="lecture-channel">{lecture.snippet.channelTitle}</motion.p>
+              </Link>
+            </motion.div>
+          ))}
+          {lectures.length === 0 && !isLoading && !error && (
+            <motion.div
+              className="no-results"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <p>No lectures found. Please refine your search.</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </>
+    </motion.div>
   );
 }
