@@ -7,10 +7,12 @@ import Dashboard from "./pages/Dashboard";
 import Lecture from "./pages/Lecture";
 import Lectureyoutube from "./pages/Lectureyoutube";
 import Quiz from "./pages/Quiz";
+import Chatbot from "./pages/Chatbot";
 import HomePage from "./pages/Home";
+
 function App() {
   return (
-    <div className="App">
+    <div>
       <Router>
         <Navbar />
         <br></br>
@@ -23,6 +25,7 @@ function App() {
           <Route path="/quiz" element={<Quiz />}></Route>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/Home" element={<HomePage />}></Route>
+          <Route path="/chat" element={<Chatbot />}></Route>
           <Route
             path={"/lecture" || "/lecture/:search"}
             element={<Lecture />}
