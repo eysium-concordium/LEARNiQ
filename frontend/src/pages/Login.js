@@ -91,12 +91,12 @@ function Login() {
                   placeholder="Password"
                 />
               </div>
-              <button
+              {/* <button
                 type="submit"
                 className="btn btn-outline-success btn-block"
-              >
-                Sign in
-              </button>
+              > */}
+              <Link to="/dashboard">Sign in</Link>
+              {/* </button> */}
             </form>
             <p className="mt-3">
               Not registered? <Link to="/Register">Create Account</Link>

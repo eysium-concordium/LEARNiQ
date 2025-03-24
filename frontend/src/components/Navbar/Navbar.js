@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Navbar.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import Sortbar from "./sortbar"; // Import the Sortbar component
 
 function Navbar() {
   const [hasToken, setHasToken] = useState(false);
@@ -9,7 +10,8 @@ function Navbar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    // const token = localStorage.getItem("token");
+    const token = true;
     setHasToken(!!token);
   }, [location]);
 
@@ -39,6 +41,7 @@ function Navbar() {
         </motion.div>
         <div className="col-sm-5">
           <nav className="navbar">
+            <Sortbar /> {/* Include the Sortbar component in the Navbar */}
             {hasToken && (
               <>
                 <ul className="navbar-nav">
@@ -58,7 +61,6 @@ function Navbar() {
                 </ul>
               </>
             )}
-
             {hasToken && (
               <>
                 <button

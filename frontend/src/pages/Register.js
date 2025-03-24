@@ -107,9 +107,9 @@ function Register() {
                   onChange={onChange}
                 />
               </div>
-              <button type="submit" className="btn btn-primary btn-block">
-                Sign Up
-              </button>
+              {/* <button type="submit" className="btn btn-primary btn-block"> */}
+              <Link to="/dashboard">Sign Up</Link>
+              {/* </button> */}
             </form>
             <p className="mt-3">
               Registered? <Link to="/login">Login</Link>

@@ -46,7 +46,8 @@ export default function Dashboardfinal() {
   const [userDetails, setUserDetails] = useState({});
   const [userId, setUserID] = useState("");
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    // const token = localStorage.getItem("token");
+    const token = true;
     if (token) {
       fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/getuser`, {
         method: "POST",
