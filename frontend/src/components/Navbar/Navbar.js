@@ -4,13 +4,32 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 function Navbar() {
-  const [hasToken, setHasToken] = useState(true);
+
+  const [hasToken, setHasToken] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     setHasToken(!!token);
+
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [location]);
 
   const handleLogout = () => {
@@ -19,59 +38,91 @@ function Navbar() {
     navigate("/Home");
   };
 
-  return (
-    <div className="container-fluid cont1">
-      <div className="row">
-        <motion.div whileHover={{ scale: 1 }} className="flex item-center justify-center">
-          <img
-            src="images/learniq-logo.png"
-            height="55px"
-            width="55px"
-            className="imgg"
-            alt="LearnIQ Logo"
-          />
-          <img
-            src="images/learniqtext.png"
-            height="30px"
-            width="140px"
-            alt="LearnIQ Text"
-          />
-        </motion.div>
-        <div className="col-sm-5">
-          <nav className="navbar">
-            {hasToken && (
-              <>
-                <ul className="navbar-nav">
-                  <Link to="/Quiz" className="nav-link">
-                    Quiz
-                  </Link>
-                </ul>
-                <ul className="navbar-nav">
-                  <Link to="/Dashboard" className="nav-link">
-                    Dashboard
-                  </Link>
-                </ul>
-                <ul className="navbar-nav">
-                  <Link to="/Lecture" className="nav-link">
-                    Lectures
-                  </Link>
-                </ul>
-              </>
-            )}
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
-            {hasToken && (
+  return (
+
+    <div className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
+      <div className="navbar-container">
+        <div className="logo-section">
+          <Link to="/" className="logo-link">
+            <motion.img
+              src="images/learniq-logo.png"
+              className="logo-img"
+              alt="LearnIQ Logo"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            />
+            <motion.img
+              src="images/learniqtext.png"
+              className="logo-text"
+              alt="LearnIQ Text"
+            />
+          </Link>
+        </div>
+
+        <div className="menu-toggle" onClick={toggleMobileMenu}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+
+        <nav className={`nav-section ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+          {hasToken && (
+            <ul className="nav-links">
+              <li className="nav-item">
+                <Link to="/Quiz" className="nav-link">
+                  Quiz
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/Dashboard" className="nav-link">
+                  Dashboard
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/Lecture" className="nav-link">
+                  Lectures
+                </Link>
+              </li>
+            </ul>
+          )}
+
+          <div className="auth-section">
+            {hasToken ? (
+              <motion.button
+                className="logout-btn"
+                onClick={handleLogout}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Logout
+              </motion.button>
+            ) : (
               <>
-                <button
-                  type="button"
-                  className="btn btn-outline-success"
-                  onClick={handleLogout}
+                <motion.button
+                  className="login-btn"
+                  onClick={() => navigate("/login")}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <span>Logout</span>
-                </button>
+                  Login
+                </motion.button>
+                <motion.button
+                  className="register-btn"
+                  onClick={() => navigate("/register")}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Register
+                </motion.button>
               </>
             )}
-          </nav>
-        </div>
+          </div>
+        </nav>
       </div>
     </div>
   );
