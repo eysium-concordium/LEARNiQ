@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 function Navbar() {
-  const [hasToken, setHasToken] = useState(false);
+  const [hasToken, setHasToken] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ function Navbar() {
   return (
     <div className="container-fluid cont1">
       <div className="row">
-        <motion.div className="col-sm-7" whileHover={{ scale: 1 }}>
+        <motion.div whileHover={{ scale: 1 }} className="flex item-center justify-center">
           <img
             src="images/learniq-logo.png"
             height="55px"
