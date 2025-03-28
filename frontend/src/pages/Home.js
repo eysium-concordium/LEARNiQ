@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import "../Styles/HomePage.css"; // You'll need to create this CSS file
 
 const HomePage = () => {
@@ -42,6 +43,7 @@ const HomePage = () => {
             <div className="feature-icon">🔄</div>
             <h3>Adaptive Content</h3>
             <p>Personalized learning paths that evolve with your progress</p>
+
           </div>
         </div>
       </section>

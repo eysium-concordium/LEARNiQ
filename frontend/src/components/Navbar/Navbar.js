@@ -4,9 +4,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 function Navbar() {
+
   const [hasToken, setHasToken] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -41,6 +43,7 @@ function Navbar() {
   };
 
   return (
+
     <div className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
         <div className="logo-section">
@@ -65,6 +68,7 @@ function Navbar() {
           <span></span>
           <span></span>
         </div>
+
 
         <nav className={`nav-section ${mobileMenuOpen ? 'mobile-open' : ''}`}>
           {hasToken && (

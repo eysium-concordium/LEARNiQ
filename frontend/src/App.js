@@ -8,7 +8,9 @@ import Dashboard from "./pages/Dashboard";
 import Lecture from "./pages/Lecture";
 import Lectureyoutube from "./pages/Lectureyoutube";
 import Quiz from "./pages/Quiz";
+import Chatbot from "./pages/Chatbot";
 import HomePage from "./pages/Home";
+
 
 // PrivateRoute component to protect routes requiring authentication
 const PrivateRoute = ({ element }) => {
@@ -21,6 +23,7 @@ const AuthRoute = ({ element }) => {
   const isAuthenticated = localStorage.getItem("token") !== null;
   return isAuthenticated ? <Navigate to="/dashboard" /> : element;
 };
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -46,6 +49,7 @@ function App() {
   };
 
   return (
+
     <Router>
       <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <Routes>
@@ -66,6 +70,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
+
   );
 }
 
